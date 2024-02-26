@@ -4,6 +4,7 @@ const fs = require("fs");
 const bodyparser = require("body-parser");
 const data = require('./data');
 const port = process.env.PORT || 2000;
+const bcrypt = require("bcryptjs")
 
 
 const app = express();
@@ -90,6 +91,63 @@ const newdata = {enrollmentNumber}
         res.json(searchData)
     }else{
         res.status(404).send("Data not found")
+    }
+})
+
+
+// Register API 
+// 
+let usersData = []
+try {
+    usersData = require("./userdata")
+    
+} catch (error) {
+    console.log("error reading userdata.js", error)
+}
+
+app.post("/register", (req, res)=>{
+
+    const newuserData = {
+        name:req.body.name,
+        email: req.body.email,
+        password: req.body.password
+        
+    };
+    
+
+    // 
+    const isemailDuplicate = usersData.some(data=>data.email===newuserData.email)
+if (isemailDuplicate) {
+    return res.status(400).send("User Already exists");   
+}
+// 
+
+usersData.push(newuserData)
+
+    fs.writeFile("userdata.js",`module.exports = ${JSON.stringify(usersData, null, 2)}`, (err)=>{
+        if (err) {
+            console.log("error writing userdata.js", err);
+            res.status(500).send("error saving data")
+        }else{
+            res.send("Registerd Success")
+        }
+    })
+
+})
+
+
+// Login API 
+app.post("/login",(req, res)=>{ 
+    const {email, password} = req.body;
+const newlogindata = {email, password}
+    console.log("new login data is"+newlogindata)
+
+    // Find Data 
+    const searchuser = usersData.find(data=>data.email === newlogindata.email && data.password=== newlogindata.password);
+    if (searchuser) {
+        res.json(searchuser)
+    }else{
+        res.status(404).send("Invalid email or password")
     }
 })
 
