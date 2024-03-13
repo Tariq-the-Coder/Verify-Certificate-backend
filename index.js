@@ -39,6 +39,8 @@ const {
     enrollmentNumber,
     course,
     grade,
+    startdate,
+    enddate,
     date
 } = req.body;
 
@@ -63,6 +65,8 @@ const newData = {
     enrollmentNumber,
     course,
     grade,
+    startdate,
+    enddate,
     date
 };
 console.log("Recieved form data",newData)
