@@ -4,8 +4,8 @@ const bodyparser = require("body-parser");
 const port = process.env.PORT || 2000;
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
-const User = require("./models/useModel");
-const Certificate = require("./models/certificateModel");
+const User = require("./useModel");
+const Certificate = require("./certificateModel");
 const nodemailer = require("nodemailer");
 const otpGenerator = require("otp-generator");
 
